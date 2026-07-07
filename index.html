@@ -170,8 +170,36 @@ body{min-height:100vh;min-height:100dvh}
 @keyframes shimmer-pulse{0%,70%,100%{opacity:0}80%{opacity:0.9}85%{opacity:0.4}88%{opacity:0.7}}
 .bg-noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/></svg>")}
 
+/* Fumaça subindo (global, tingida pelo acento do tema) */
+.bg-smoke{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.bg-smoke span{position:absolute;bottom:-120px;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,rgba(var(--accent-rgb),0.55),transparent 70%);filter:blur(6px);opacity:0;animation:smoke-rise linear infinite}
+.bg-smoke span:nth-child(1){left:8%;width:12px;height:12px;animation-duration:18s;animation-delay:0s}
+.bg-smoke span:nth-child(2){left:18%;width:8px;height:8px;animation-duration:22s;animation-delay:4s}
+.bg-smoke span:nth-child(3){left:30%;width:14px;height:14px;animation-duration:26s;animation-delay:8s}
+.bg-smoke span:nth-child(4){left:44%;width:10px;height:10px;animation-duration:20s;animation-delay:2s}
+.bg-smoke span:nth-child(5){left:58%;width:12px;height:12px;animation-duration:24s;animation-delay:11s}
+.bg-smoke span:nth-child(6){left:70%;width:8px;height:8px;animation-duration:19s;animation-delay:6s}
+.bg-smoke span:nth-child(7){left:82%;width:14px;height:14px;animation-duration:28s;animation-delay:14s}
+.bg-smoke span:nth-child(8){left:92%;width:10px;height:10px;animation-duration:23s;animation-delay:9s}
+@keyframes smoke-rise{0%{transform:translateY(0) translateX(0) scale(0.8);opacity:0}10%{opacity:0.6}50%{transform:translateY(-50vh) translateX(20px) scale(1.4);opacity:0.5}90%{opacity:0.2}100%{transform:translateY(-105vh) translateX(-15px) scale(1.8);opacity:0}}
+
+/* Névoa (Darkrai) e estrelas cadentes (Cresselia) */
+.bg-fog,.bg-shooting{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;transition:opacity 0.7s ease}
+[data-theme="cresselia"] .bg-fog{opacity:0}
+[data-theme="leafeon"] .bg-fog{opacity:0}
+.bg-shooting{opacity:0}
+[data-theme="cresselia"] .bg-shooting{opacity:1}
+[data-theme="leafeon"] .bg-shooting{opacity:0}
+.fog-layer{position:absolute;border-radius:50%;mix-blend-mode:screen;opacity:0;will-change:transform,opacity;animation:fog-rise var(--dur,16s) ease-in-out infinite;animation-delay:var(--delay,0s)}
+@keyframes fog-rise{0%{transform:translateY(15%) scale(1);opacity:0}18%{opacity:var(--opa,0.85)}82%{opacity:var(--opa,0.85)}100%{transform:translateY(-85%) scale(1.35);opacity:0}}
+.shooting-star{position:absolute;width:var(--length,220px);height:2px;top:var(--y,30%);left:-25%;transform-origin:left center;border-radius:999px;
+  background:linear-gradient(90deg,transparent 0%,rgba(196,255,214,0) 7%,rgba(196,255,214,0.55) 20%,rgba(196,224,255,0.7) 33%,rgba(228,200,255,0.82) 46%,rgba(255,196,224,0.9) 60%,rgba(255,218,184,0.95) 74%,rgba(255,240,200,1) 87%,rgba(255,230,158,1) 96%,rgba(255,250,230,1) 100%);
+  filter:drop-shadow(0 0 6px rgba(255,200,168,0.7)) drop-shadow(0 0 16px rgba(228,168,224,0.5));opacity:0;pointer-events:none;will-change:transform,opacity;animation:star-fall var(--dur,5s) linear infinite;animation-delay:var(--delay,0s)}
+.shooting-star::after{content:"";position:absolute;right:-3px;top:50%;transform:translate(50%,-50%);width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,#ffffff 0%,rgba(255,230,200,0.55) 45%,transparent 80%);filter:blur(0.3px)}
+@keyframes star-fall{0%{transform:rotate(var(--angle,22deg)) translateX(0);opacity:0}10%{opacity:var(--opa,1)}85%{opacity:var(--opa,1)}100%{transform:rotate(var(--angle,22deg)) translateX(var(--travel,170vw));opacity:0}}
+
 @media (prefers-reduced-motion: reduce){
-  .bg-mist,.bg-wisps span,.bg-stars span,.bg-eye,.bg-shimmer,.bg-tendrils,.bg-leaves span svg,.bg-leaves span i{animation:none !important}
+  .bg-mist,.bg-wisps span,.bg-stars span,.bg-eye,.bg-shimmer,.bg-tendrils,.bg-leaves span svg,.bg-leaves span i,.bg-smoke span,.fog-layer,.shooting-star{animation:none !important}
 }
 
 /* ==========================================================
@@ -183,7 +211,13 @@ body{min-height:100vh;min-height:100dvh}
 .topbar{display:flex;align-items:center;gap:14px;margin-bottom:26px}
 .brand{font-family:var(--font-mono);font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-muted)}
 .brand b{color:var(--text-secondary);font-weight:600}
-.theme-toggle-wrap{margin-left:auto;position:relative;display:inline-flex;align-items:center}
+.top-actions{margin-left:auto;display:inline-flex;align-items:center;gap:8px}
+.theme-toggle-wrap{position:relative;display:inline-flex;align-items:center}
+.btn-export{height:38px;padding:0 15px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:var(--font-display);font-size:13px;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;gap:8px}
+.btn-export:hover{border-color:var(--accent-purple);color:var(--accent-purple-bright);box-shadow:var(--shadow-glow)}
+.btn-export:disabled{opacity:.55;cursor:default;box-shadow:none;border-color:var(--border)}
+.btn-export svg{width:15px;height:15px;color:var(--accent-purple);flex:none}
+.btn-export:hover svg{color:var(--accent-purple-bright)}
 .theme-toggle{appearance:none;background:transparent;border:none;padding:8px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;transition:var(--transition-fast)}
 .theme-toggle:hover{background:rgba(var(--accent-rgb),0.1)}
 .theme-toggle svg{width:22px;height:22px;color:var(--accent-purple-bright);filter:drop-shadow(0 0 8px rgba(var(--accent-rgb),0.5));transition:transform 0.5s cubic-bezier(0.4,0,0.2,1),color 0.6s ease}
@@ -329,6 +363,25 @@ body{min-height:100vh;min-height:100dvh}
 <div class="bg-wisps"><span></span><span></span><span></span></div>
 <div class="bg-stars"><span></span><span></span><span></span><span></span><span></span></div>
 <div class="bg-leaves" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="bg-smoke" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="bg-fog" aria-hidden="true">
+  <div class="fog-layer" style="left:-15%;right:-15%;bottom:-25%;height:55%;background:radial-gradient(ellipse at 50% 100%,rgba(154,92,200,0.7),rgba(95,190,212,0.22) 45%,transparent 78%);filter:blur(70px);--dur:22s;--delay:0s;--opa:0.85;"></div>
+  <div class="fog-layer" style="left:-5%;right:30%;bottom:-15%;height:60%;background:radial-gradient(ellipse at 50% 100%,rgba(95,190,212,0.55),rgba(154,92,200,0.18) 50%,transparent 80%);filter:blur(55px);--dur:18s;--delay:-7s;--opa:0.75;"></div>
+  <div class="fog-layer" style="left:30%;right:-5%;bottom:-10%;height:65%;background:radial-gradient(ellipse at 50% 100%,rgba(184,138,196,0.5),rgba(95,190,212,0.16) 55%,transparent 82%);filter:blur(60px);--dur:26s;--delay:-3s;--opa:0.7;"></div>
+  <div class="fog-layer" style="left:10%;right:10%;bottom:-5%;height:35%;background:radial-gradient(ellipse at 50% 100%,rgba(95,190,212,0.45),transparent 75%);filter:blur(40px);--dur:14s;--delay:-10s;--opa:0.55;"></div>
+  <div class="fog-layer" style="left:20%;right:-10%;bottom:-20%;height:50%;background:radial-gradient(ellipse at 50% 100%,rgba(140,90,180,0.45),rgba(80,160,200,0.15) 55%,transparent 82%);filter:blur(50px);--dur:20s;--delay:-14s;--opa:0.65;"></div>
+</div>
+<div class="bg-shooting" aria-hidden="true">
+  <div class="shooting-star" style="--y:6%;--angle:20deg;--length:260px;--dur:5.5s;--delay:0s;--opa:1;--travel:170vw;"></div>
+  <div class="shooting-star" style="--y:14%;--angle:24deg;--length:200px;--dur:4.5s;--delay:-6s;--opa:0.95;--travel:175vw;"></div>
+  <div class="shooting-star" style="--y:22%;--angle:28deg;--length:180px;--dur:4s;--delay:-2.5s;--opa:0.9;--travel:175vw;"></div>
+  <div class="shooting-star" style="--y:32%;--angle:14deg;--length:300px;--dur:7s;--delay:-1s;--opa:0.95;--travel:165vw;"></div>
+  <div class="shooting-star" style="--y:42%;--angle:22deg;--length:170px;--dur:4.2s;--delay:-9s;--opa:1;--travel:180vw;"></div>
+  <div class="shooting-star" style="--y:50%;--angle:24deg;--length:150px;--dur:3.8s;--delay:-3.5s;--opa:1;--travel:180vw;"></div>
+  <div class="shooting-star" style="--y:62%;--angle:18deg;--length:230px;--dur:6.2s;--delay:-0.5s;--opa:0.9;--travel:170vw;"></div>
+  <div class="shooting-star" style="--y:72%;--angle:26deg;--length:200px;--dur:5s;--delay:-7s;--opa:1;--travel:175vw;"></div>
+  <div class="shooting-star" style="--y:84%;--angle:20deg;--length:240px;--dur:5.8s;--delay:-4s;--opa:0.95;--travel:170vw;"></div>
+</div>
 <div class="bg-shimmer"></div>
 <div class="bg-tendrils"></div>
 <div class="bg-eye"></div>
@@ -338,11 +391,17 @@ body{min-height:100vh;min-height:100dvh}
 <div class="wrap">
 
   <div class="topbar">
-    <span class="brand"><b>500MD</b> · planejador de compras</span>
-    <div class="theme-toggle-wrap">
-      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Alternar tema (Darkrai / Cresselia / Leafeon)" title="Alternar tema">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16 A8 8 0 1 1 14 8 A6 6 0 1 0 22 16 Z" fill="currentColor"/></svg>
+    <span class="brand"><b>x1_Ano</b> · planejador de compras</span>
+    <div class="top-actions">
+      <button type="button" class="btn-export" id="btnExport" title="Baixar planilha .xlsx com o plano e o checklist">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><line x1="3.5" y1="9" x2="20.5" y2="9" stroke="currentColor" stroke-width="1.6"/><line x1="9" y1="9" x2="9" y2="20" stroke="currentColor" stroke-width="1.6"/><line x1="14.5" y1="9" x2="14.5" y2="20" stroke="currentColor" stroke-width="1.6"/></svg>
+        Exportar .xlsx
       </button>
+      <div class="theme-toggle-wrap">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Alternar tema (Darkrai / Cresselia / Leafeon)" title="Alternar tema">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16 A8 8 0 1 1 14 8 A6 6 0 1 0 22 16 Z" fill="currentColor"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -674,6 +733,154 @@ body{min-height:100vh;min-height:100dvh}
   })();
   (function bootTheme(){ let saved=null; try{ saved=localStorage.getItem(THEME_KEY); }catch(_){} aplicarTema(saved||"darkrai"); })();
   $("#theme-toggle").addEventListener("click",()=>{ const next=proximoTema(temaAtual()); aplicarTema(next); showToast(TOAST[next]); });
+
+  /* ==========================================================
+     Exportação .xlsx  (SheetJS carregado sob demanda via CDN)
+     ========================================================== */
+  const XLSX_URL = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+  function loadXLSX(){
+    if(window.XLSX) return Promise.resolve(window.XLSX);
+    if(loadXLSX._p) return loadXLSX._p;
+    loadXLSX._p = new Promise((res,rej)=>{
+      const s=document.createElement("script"); s.src=XLSX_URL; s.async=true;
+      s.onload=()=> window.XLSX ? res(window.XLSX) : rej(new Error("XLSX indisponível"));
+      s.onerror=()=> rej(new Error("Falha ao carregar a biblioteca (sem internet?)"));
+      document.head.appendChild(s);
+    });
+    return loadXLSX._p;
+  }
+
+  // Monta os dados (arrays de arrays) das 3 abas a partir do estado atual
+  function montarPlano(){
+    const metas=metaPorColecao();
+    const prods=state.products.filter(p=>p.size>0);
+    const modoLabel = state.modo==="custo" ? "Menor custo" : "Encaixe";
+    let dias="—";
+    if(state.date){ const t=new Date(state.date+"T00:00:00"), h=new Date(); h.setHours(0,0,0,0); const dd=Math.round((t-h)/86400000); dias = dd<0?"passou":dd; }
+
+    const linhas = state.cols.map((c,i)=>{
+      const alvo=(c.metaOverride!=null?c.metaOverride:metas[i])|0;
+      const have=Math.max(0,c.have|0);
+      const faltam=Math.max(0,alvo-have);
+      const off=new Set(c.off||[]);
+      const disp=prods.filter(p=>!off.has(p.id));
+      const r=otimizar(faltam,disp,state.modo);
+      return {nome:c.nome||("Coleção "+(i+1)), alvo, have, faltam, r, semProduto:(faltam>0 && r===null)};
+    });
+
+    // ---- Aba Plano de compra ----
+    const cabecalho=["Coleção","Alvo","Já tenho","Faltam",...prods.map(p=>p.nome),"Comprar (boosters)","Sobra","Custo médio (R$)"];
+    const plano=[cabecalho];
+    linhas.forEach(L=>{
+      const combo=(L.r&&L.r.combo)||{};
+      const row=[L.nome, L.alvo, L.have, L.faltam];
+      prods.forEach(p=> row.push(combo[p.id]||null));
+      row.push(L.r? L.r.total : (L.semProduto? null : 0));
+      row.push(L.r? L.r.sobra : (L.semProduto? null : 0));
+      row.push(L.r? (L.r.custo||0) : (L.semProduto? null : 0));
+      plano.push(row);
+    });
+
+    // ---- Aba Checklist ----
+    const checklist=[["Coleção","Item","Qtd","Boosters","Obtido? (marque X)"]];
+    linhas.forEach(L=>{
+      if(L.faltam<=0) return;               // meta já batida → nada a obter
+      if(L.semProduto){ checklist.push([L.nome,"(sem produto disponível)","","",""]); return; }
+      const combo=(L.r&&L.r.combo)||{};
+      prods.filter(p=>combo[p.id]).sort((a,b)=>b.size-a.size).forEach(p=>{
+        checklist.push([L.nome, p.nome, combo[p.id], combo[p.id]*p.size, ""]);
+      });
+    });
+
+    // ---- Aba Resumo ----
+    const totalFaltam=linhas.reduce((s,L)=>s+L.faltam,0);
+    const totalComprar=linhas.reduce((s,L)=>s+(L.r?L.r.total:0),0);
+    const totalSobra=linhas.reduce((s,L)=>s+(L.r?L.r.sobra:0),0);
+    const totalCusto=linhas.reduce((s,L)=>s+(L.r?(L.r.custo||0):0),0);
+    const resumo=[
+      ["x1_Ano — Plano de compra de boosters"],
+      [],
+      ["Meta total (boosters)", state.meta],
+      ["Coleções", state.nCols],
+      ["Boosters por coleção (média)", state.nCols>0?Math.round(state.meta/state.nCols):0],
+      ["Data do evento", state.date||"—"],
+      ["Dias restantes", dias],
+      ["Otimização", modoLabel],
+      [],
+      ["Boosters ainda faltando", totalFaltam],
+      ["Boosters a comprar (com sobra)", totalComprar],
+      ["Sobra total", totalSobra],
+      ["Custo médio estimado (R$)", Math.round(totalCusto*100)/100],
+      [],
+      ["Gerado em", new Date().toLocaleString("pt-BR")],
+    ];
+
+    return {resumo, plano, checklist, nProds:prods.length, nLinhas:linhas.length};
+  }
+
+  function nomeArquivo(){
+    const d=new Date();
+    const p=n=>String(n).padStart(2,"0");
+    return `x1_ano_plano_${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}.xlsx`;
+  }
+
+  async function exportarXLSX(btn){
+    const orig = btn ? btn.innerHTML : "";
+    if(btn){ btn.disabled=true; btn.textContent="Gerando…"; }
+    try{
+      const XLSX = await loadXLSX();
+      const {resumo, plano, checklist, nProds, nLinhas} = montarPlano();
+
+      const wb = XLSX.utils.book_new();
+
+      // Resumo
+      const wsR = XLSX.utils.aoa_to_sheet(resumo);
+      wsR["!cols"]=[{wch:32},{wch:24}];
+      XLSX.utils.book_append_sheet(wb, wsR, "Resumo");
+
+      // Plano de compra (+ linha de TOTAL com valor somado E fórmula SUM)
+      const nCols = 4 + nProds + 3;                 // Coleção + Alvo/Já/Faltam + produtos + Comprar/Sobra/Custo
+      const lastDataRow = nLinhas + 1;              // 1 = cabeçalho, dados 2..nLinhas+1
+      const somas = new Array(nCols).fill(0);
+      for(let r=1;r<=nLinhas;r++){ const row=plano[r]||[]; for(let c=1;c<nCols;c++){ if(typeof row[c]==="number") somas[c]+=row[c]; } }
+      const totalRow = ["TOTAL"];
+      for(let c=1;c<nCols;c++) totalRow.push(somas[c]);
+      plano.push(totalRow);
+      const wsP = XLSX.utils.aoa_to_sheet(plano);
+      const custoCol = nCols-1;                      // índice 0-based da coluna de custo
+      const totalExcelRow = nLinhas + 2;             // linha do TOTAL no Excel (1-based)
+      // adiciona a fórmula SUM preservando o valor já calculado
+      for(let c=1;c<nCols;c++){
+        const L=XLSX.utils.encode_col(c);
+        const ref=XLSX.utils.encode_cell({r:totalExcelRow-1, c});
+        if(wsP[ref]) wsP[ref].f=`SUM(${L}2:${L}${lastDataRow})`;
+      }
+      // formato de moeda na coluna de custo (dados + total)
+      const zCusto='"R$" #,##0.00';
+      for(let rr=1;rr<=totalExcelRow-1;rr++){
+        const ref=XLSX.utils.encode_cell({r:rr, c:custoCol});
+        if(wsP[ref]) wsP[ref].z=zCusto;
+      }
+      wsP["!cols"]=[{wch:20},{wch:7},{wch:9},{wch:8},...Array(nProds).fill({wch:13}),{wch:17},{wch:7},{wch:16}];
+      wsP["!autofilter"]={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:lastDataRow-1,c:nCols-1}})};
+      XLSX.utils.book_append_sheet(wb, wsP, "Plano de compra");
+
+      // Checklist
+      const wsC = XLSX.utils.aoa_to_sheet(checklist);
+      wsC["!cols"]=[{wch:20},{wch:20},{wch:6},{wch:9},{wch:18}];
+      wsC["!autofilter"]={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:Math.max(0,checklist.length-1),c:4}})};
+      XLSX.utils.book_append_sheet(wb, wsC, "Checklist");
+
+      XLSX.writeFile(wb, nomeArquivo());
+      if(btn){ btn.textContent="✓ Exportado"; }
+    }catch(e){
+      console.warn("Export falhou:", e);
+      if(btn){ btn.textContent="Erro — sem internet?"; }
+    }finally{
+      if(btn) setTimeout(()=>{ btn.disabled=false; btn.innerHTML=orig; }, 1900);
+    }
+  }
+  $("#btnExport").addEventListener("click", e => exportarXLSX(e.currentTarget));
 
   /* ---------- Boot ---------- */
   $("#cfgMeta").value=state.meta;
